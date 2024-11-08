@@ -32,6 +32,10 @@ interface StyleProps {
 
 export interface Props {
   /**
+   * This gets called when the recording is started.
+   */
+  onRecordingStarted? : () => void;
+  /**
    * This gets called when the save button is clicked.
    * In case the recording is cancelled, the blob is discarded.
    **/

@@ -17,7 +17,7 @@ const LiveAudioVisualizer = React.lazy(async () => {
 /**
  * Usage: https://github.com/samhirtarif/react-audio-recorder#audiorecorder-component
  *
- *
+ * @prop `onRecordingStarted` Method that gets called when start recording option is clicked
  * @prop `onRecordingComplete` Method that gets called when save recording option is clicked
  * @prop `recorderControls` Externally initilize hook and pass the returned object to this param, this gives your control over the component from outside the component.
  * https://github.com/samhirtarif/react-audio-recorder#combine-the-useaudiorecorder-hook-and-the-audiorecorder-component
@@ -29,6 +29,7 @@ const LiveAudioVisualizer = React.lazy(async () => {
  * @prop `classes` Is an object with attributes representing classes for different parts of the component
  */
 const AudioRecorder: (props: Props) => ReactElement = ({
+  onRecordingStarted,
   onRecordingComplete,
   onNotAllowedOrFound,
   recorderControls,
@@ -54,10 +55,17 @@ const AudioRecorder: (props: Props) => ReactElement = ({
     useAudioRecorder(
       audioTrackConstraints,
       onNotAllowedOrFound,
+      onRecordingStarted,
+      onRecordingComplete,
       mediaRecorderOptions
     );
 
   const [shouldSave, setShouldSave] = useState(false);
+
+  const startAudioRecorder: () => void = () => {
+    startRecording();
+    onRecordingStarted && onRecordingStarted();
+  };
 
   const stopAudioRecorder: (save?: boolean) => void = (
     save: boolean = true
@@ -139,7 +147,7 @@ const AudioRecorder: (props: Props) => ReactElement = ({
         className={`audio-recorder-mic ${
           classes?.AudioRecorderStartSaveClass ?? ""
         }`}
-        onClick={isRecording ? () => stopAudioRecorder() : startRecording}
+        onClick={isRecording ? () => stopAudioRecorder() : () => startAudioRecorder()}
         data-testid="ar_mic"
         title={isRecording ? "Save recording" : "Start recording"}
       />

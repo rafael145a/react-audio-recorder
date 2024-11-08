@@ -41,10 +41,14 @@ export type MediaAudioTrackConstraints = Pick<
 const useAudioRecorder: (
   audioTrackConstraints?: MediaAudioTrackConstraints,
   onNotAllowedOrFound?: (exception: DOMException) => any,
+  onRecordingStarted?: () => void,
+  onRecordingComplete?: (blob: Blob) => void,
   mediaRecorderOptions?: MediaRecorderOptions
 ) => recorderControls = (
   audioTrackConstraints,
   onNotAllowedOrFound,
+  onRecordingStarted,
+  onRecordingComplete,
   mediaRecorderOptions
 ) => {
   const [isRecording, setIsRecording] = useState(false);
@@ -83,6 +87,7 @@ const useAudioRecorder: (
         setMediaRecorder(recorder);
         recorder.start();
         _startTimer();
+        onRecordingStarted && onRecordingStarted();
 
         recorder.addEventListener("dataavailable", (event) => {
           setRecordingBlob(event.data);
@@ -113,6 +118,7 @@ const useAudioRecorder: (
     setRecordingTime(0);
     setIsRecording(false);
     setIsPaused(false);
+    onRecordingComplete && recordingBlob && onRecordingComplete(recordingBlob);
   }, [
     mediaRecorder,
     setRecordingTime,
