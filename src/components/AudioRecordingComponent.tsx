@@ -43,9 +43,11 @@ const AudioRecorder: (props: Props) => ReactElement = ({
     startRecording,
     stopRecording,
     togglePauseResume,
+    cancelRecording,
     recordingBlob,
     isRecording,
     isPaused,
+    isCancelled,
     recordingTime,
     mediaRecorder,
   } =
@@ -62,6 +64,9 @@ const AudioRecorder: (props: Props) => ReactElement = ({
   const stopAudioRecorder: (save?: boolean) => void = (
     save: boolean = true
   ) => {
+    if (!save) {
+      cancelRecording();
+    }
     setShouldSave(save);
     stopRecording();
   };
@@ -116,6 +121,7 @@ const AudioRecorder: (props: Props) => ReactElement = ({
 
   useEffect(() => {
     if (
+      !isCancelled &&
       (shouldSave || recorderControls) &&
       recordingBlob != null &&
       onRecordingComplete != null
@@ -126,6 +132,10 @@ const AudioRecorder: (props: Props) => ReactElement = ({
       }
     }
   }, [recordingBlob]);
+
+  useEffect(() => {
+    stopRecording();
+  }, [isCancelled]);
 
   return (
     <div

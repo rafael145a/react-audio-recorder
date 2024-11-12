@@ -88,6 +88,7 @@ The hook returns the following:
 | :------------ |:---------------|
 | **`startRecording`** | Invoking this method starts the recording. Sets `isRecording` to `true` |
 | **`stopRecording`** | Invoking this method stops the recording in progress and the resulting audio is made available in `recordingBlob`. Sets `isRecording` to `false` |
+| **`cancelRecording`** | Invoking this method cancels the recording in progress and discard audio. Sets `isRecording` to `false` |
 | **`togglePauseResume`** | Invoking this method would pause the recording if it is currently running or resume if it is paused. Toggles the value `isPaused` |
 | **`recordingBlob`** | This is the recording blob that is created after `stopRecording` has been called |
 | **`isRecording`** | A boolean value that represents whether a recording is currently in progress |

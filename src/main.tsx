@@ -1,6 +1,7 @@
 import React from "react";
 import ReactDOM from "react-dom/client";
 import AudioRecorder from "./components/AudioRecordingComponent";
+import useAudioRecorder from "./hooks/useAudioRecorder";
 
 const addAudioElement = (blob: Blob) => {
   const url = URL.createObjectURL(blob);
@@ -10,8 +11,10 @@ const addAudioElement = (blob: Blob) => {
   document.body.appendChild(audio);
 };
 
-ReactDOM.createRoot(document.getElementById("root") as HTMLElement).render(
-  <React.StrictMode>
+function AudioRecorderComp() {
+  const { isRecording, stopRecording, cancelRecording, ...recordControls } = useAudioRecorder()
+
+  return (<>
     <AudioRecorder 
       onRecordingComplete={(blob) => addAudioElement(blob)} 
       // audioTrackConstraints={{
@@ -20,8 +23,16 @@ ReactDOM.createRoot(document.getElementById("root") as HTMLElement).render(
       // }} 
       onNotAllowedOrFound={(err) => console.table(err)}
       showVisualizer={true}
-      downloadOnSavePress
-      downloadFileExtension="mp3"
+      recorderControls={{ isRecording, stopRecording, cancelRecording, ...recordControls}}
     />
+    <button onClick={stopRecording}>Save</button>
+    <button onClick={cancelRecording}>Cancel</button>
+    </>
+  )
+}
+
+ReactDOM.createRoot(document.getElementById("root") as HTMLElement).render(
+  <React.StrictMode>
+    <AudioRecorderComp />
   </React.StrictMode>
 );

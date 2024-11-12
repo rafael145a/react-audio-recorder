@@ -4,9 +4,11 @@ export interface recorderControls {
   startRecording: () => void;
   stopRecording: () => void;
   togglePauseResume: () => void;
+  cancelRecording: () => void;
   recordingBlob?: Blob;
   isRecording: boolean;
   isPaused: boolean;
+  isCancelled: boolean;
   recordingTime: number;
   mediaRecorder?: MediaRecorder;
 }
@@ -49,6 +51,7 @@ const useAudioRecorder: (
 ) => {
   const [isRecording, setIsRecording] = useState(false);
   const [isPaused, setIsPaused] = useState(false);
+  const [isCancelled, setIsCancelled] = useState(false);
   const [recordingTime, setRecordingTime] = useState(0);
   const [mediaRecorder, setMediaRecorder] = useState<MediaRecorder>();
   const [timerInterval, setTimerInterval] = useState<NodeJS.Timer>();
@@ -71,7 +74,7 @@ const useAudioRecorder: (
    */
   const startRecording: () => void = useCallback(() => {
     if (timerInterval != null) return;
-
+    setIsCancelled(false);
     navigator.mediaDevices
       .getUserMedia({ audio: audioTrackConstraints ?? true })
       .then((stream) => {
@@ -136,13 +139,23 @@ const useAudioRecorder: (
     }
   }, [mediaRecorder, setIsPaused, _startTimer, _stopTimer]);
 
+  /**
+   * Calling this method would cancel the recording and discard
+   */
+  const cancelRecording: () => void = useCallback(() => {
+    setIsCancelled(true);
+    setIsRecording(false);
+  }, []);
+
   return {
     startRecording,
     stopRecording,
     togglePauseResume,
+    cancelRecording,
     recordingBlob,
     isRecording,
     isPaused,
+    isCancelled,
     recordingTime,
     mediaRecorder,
   };
