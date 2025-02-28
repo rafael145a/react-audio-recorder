@@ -8,11 +8,7 @@ import resumeSVG from "../icons/play.svg";
 import saveSVG from "../icons/save.svg";
 import discardSVG from "../icons/stop.svg";
 import "../styles/audio-recorder.css";
-
-const LiveAudioVisualizer = React.lazy(async () => {
-  const { LiveAudioVisualizer } = await import("react-audio-visualize");
-  return { default: LiveAudioVisualizer };
-});
+import LiveAudioVisualizer from "./ReactAudioVisualizerWrapper";
 
 /**
  * Usage: https://github.com/samhirtarif/react-audio-recorder#audiorecorder-component
