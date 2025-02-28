@@ -16,7 +16,7 @@ const loadVisualizer = async () => {
 };
 
 // Componente wrapper que carrega o visualizador sob demanda
-const DynamicLiveAudioVisualizer = (props) => {
+const DynamicLiveAudioVisualizer = (props: any) => {
   const [Component, setComponent] = React.useState(null);
   const [loading, setLoading] = React.useState(true);
 
@@ -26,6 +26,7 @@ const DynamicLiveAudioVisualizer = (props) => {
     const load = async () => {
       const VisualizerComponent = await loadVisualizer();
       if (isMounted) {
+        // @ts-expect-error
         setComponent(() => VisualizerComponent);
         setLoading(false);
       }
@@ -39,9 +40,9 @@ const DynamicLiveAudioVisualizer = (props) => {
   }, []);
 
   if (loading || !Component) {
-    return null; // ou um placeholder
+    return null;
   }
-
+  // @ts-expect-error
   return <Component {...props} />;
 };
 
